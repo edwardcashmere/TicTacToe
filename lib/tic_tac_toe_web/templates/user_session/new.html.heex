@@ -2,7 +2,7 @@
   <.modal class="flex flex-col w-2/5 h-2/5 p-5 lg:w-5/12 max-w-screen-sm max-h-screen-md bg-[#2e2e33] border-[#2e2e33]">
     <div class="flex flex-col justify-items-center items-center">
       <h1 class="text-white my-4 text-3xl">Log in</h1>
-        <.form let={f} for={@changeset} action={Routes.user_session_path(@conn, :create)} class="w-3/5" id="registration-form" as={:user}>
+        <.form let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} class="w-3/5" id="login-form" as={:user}>
           <%= if @error_message do %>
             <div class="alert alert-danger">
               <p><%= @error_message %></p>

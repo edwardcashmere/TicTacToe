@@ -78,6 +78,9 @@ defmodule TicTacToeWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    live "/game/:user_id", GameLive, :game, as: :game
+    live "/game/:user_id/board", GameLive, :board, as: :game
+
   end
 
   scope "/", TicTacToeWeb do

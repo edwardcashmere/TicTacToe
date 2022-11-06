@@ -221,6 +221,7 @@ defmodule TicTacToe.Accounts do
   Generates a session token.
   """
   def generate_user_session_token(user) do
+    IO.inspect(user, label: "isnt this a user")
     {token, user_token} = UserToken.build_session_token(user)
     Repo.insert!(user_token)
     token

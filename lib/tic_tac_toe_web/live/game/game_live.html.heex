@@ -1,0 +1,15 @@
+
+<%= if @live_action == :board do %>
+  <.live_component module={TicTacToeWeb.GameComponent} id="board" mode={@mode} current_user={@current_user} />
+<% end %>
+<section class="flex flex-col  w-full h-screen justify-center items-center">
+  <%= link to: Routes.user_session_path(@socket, :delete, return_to: Routes.user_session_path(@socket, :new)), method: :delete, class: "flex text-white ml-auto bg-red-300 w-20 h-10 items-center justify-center rounded-md hover:cursor-pointer hover:opacity-50" do%>
+  logout
+  <% end %>
+  <p class="text-white text-2xl mb-3">Click to select which game mode you would like start play? </p>
+   <small class="text-slate-100 opacity-30">[the multiplayer cannot be started until a new user signs in and joins the board using the url link]</small>
+  <div class="flex space-x-20 w-1/2 justify-center items-center h-1/2">
+    <div class="flex bg-red-500 w-5/12 h-2/5 text-4xl rounded-md hover:opacity-50 justify-center items-center hover:cursor-pointer" phx-value-choice="multiplayer" phx-click="choice">Multiplayer</div>
+    <div class="flex justify-center items-center text-4xl text-slate-300 bg-green-500 w-5/12 h-2/5 rounded-md hover:opacity-50 hover:cursor-pointer" phx-value-choice="singleplayer" phx-click="choice">Single Player</div>
+  </div>
+</section>

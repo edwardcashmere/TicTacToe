@@ -42,6 +42,7 @@ defmodule TicTacToe.Accounts.UserToken do
   session they deem invalid.
   """
   def build_session_token(user) do
+    IO.inspect(user, label: "stuff")
     token = :crypto.strong_rand_bytes(@rand_size)
     {token, %UserToken{token: token, context: "session", user_id: user.id}}
   end
