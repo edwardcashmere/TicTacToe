@@ -2,7 +2,15 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* This file is for your main application CSS */
+@layer components {
+  .field{
+    @apply flex flex-col;
+  }
+  .input_field{
+    @apply rounded-sm w-full h-10 my-1 focus:ring-0 bg-[#0f0f10] text-white;
+  }
+}
+
 
 /* Alerts and form errors used by phx.new */
 .alert {

@@ -1,26 +1,31 @@
-<h1>Register</h1>
-
-<.form let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)}>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+<section class="w-full h-screen">
+  <.modal class="flex flex-col w-2/5 h-2/5 p-5 lg:w-5/12 max-w-screen-sm max-h-screen-md bg-[#2e2e33] border-[#2e2e33]">
+    <div class="flex flex-col justify-items-center items-center">
+      <h1 class="text-white my-4 text-3xl">Register</h1>
+        <.form let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)} class="w-3/5" id="registration-form">
+          <%= if @changeset.action do %>
+          <div class="alert alert-danger">
+            <p>Oops, something went wrong! Please check the errors below.</p>
+          </div>
+        <% end %>
+        <div class="field space-y-2">
+          <%= label f, :email, class: "text-white" %>
+          <%= email_input f, :email, phx_debounce: "1000", required: true, class: "input_field", placeholder: "email" %>
+          <%= error_tag f, :email %>
+        </div>
+        <div class="field">
+          <%= label f, :password, class: "text-white" %>
+          <%= password_input f, :password, required: true, class: "input_field", placeholder: "password" %>
+          <%= error_tag f, :password %>
+        </div>
+          <div>
+            <%= submit "save", class: " my-3 text-white h-8 bg-[#3ac152] w-full rounded-sm" %>
+          </div>
+        </.form>
+        <p class class="text-white">
+          <%= link "Log in", to: Routes.user_session_path(@conn, :new), class: "text-white hover:text-[#3ac152]" %> |
+          <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new), class: "text-white hover:text-[#3ac152]" %>
+        </p>
     </div>
-  <% end %>
-
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-  <%= error_tag f, :email %>
-
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-  <%= error_tag f, :password %>
-
-  <div>
-    <%= submit "Register" %>
-  </div>
-</.form>
-
-<p>
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %> |
-  <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
-</p>
+  </.modal>
+</section>

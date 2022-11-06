@@ -1,27 +1,42 @@
-<h1>Log in</h1>
+<section class="w-full h-screen">
+  <.modal class="flex flex-col w-2/5 h-2/5 p-5 lg:w-5/12 max-w-screen-sm max-h-screen-md bg-[#2e2e33] border-[#2e2e33]">
+    <div class="flex flex-col justify-items-center items-center">
+      <h1 class="text-white my-4 text-3xl">Log in</h1>
+        <.form let={f} for={@changeset} action={Routes.user_session_path(@conn, :create)} class="w-3/5" id="registration-form" as={:user}>
+          <%= if @error_message do %>
+            <div class="alert alert-danger">
+              <p><%= @error_message %></p>
+            </div>
+          <% end %>
+        <div class="field space-y-2">
+          <%= label f, :email, class: "text-white" %>
+          <%= email_input f, :email, phx_debounce: "1000", required: true, class: "input_field", placeholder: "email" %>
+          <%= error_tag f, :email %>
+        </div>
+        <div class="field">
+          <%= label f, :password, class: "text-white" %>
+          <%= password_input f, :password, required: true, class: "input_field", placeholder: "password" %>
+          <%= error_tag f, :password %>
+        </div>
+        <div class="field">
+          <%= label f, :remember_me, "Keep me logged in for 60 days", class: "text-white" %>
+           <%= checkbox f, :remember_me %>
+        </div>
 
-<.form let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} as={:user}>
-  <%= if @error_message do %>
-    <div class="alert alert-danger">
-      <p><%= @error_message %></p>
+          <div>
+            <%= submit "log in", class: " my-3 text-white h-8 bg-[#3ac152] w-full rounded-sm" %>
+          </div>
+        </.form>
+        <p class class="text-white">
+          <%= link "Register", to: Routes.user_registration_path(@conn, :new), class: "text-white hover:text-[#3ac152]" %> |
+          <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new), class: "text-white hover:text-[#3ac152]" %>
+        </p>
     </div>
-  <% end %>
+  </.modal>
+</section>
 
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
 
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
 
-  <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-  <%= checkbox f, :remember_me %>
 
-  <div>
-    <%= submit "Log in" %>
-  </div>
-</.form>
 
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
-</p>
+
