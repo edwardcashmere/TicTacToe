@@ -55,21 +55,9 @@ defmodule TicTacToeWeb.DashboardLive do
 
         {:noreply, socket}
 
-      "singleplayer" = mode ->
-        {:ok, game} =
-          TicTacToe.Games.create_game(%{
-            mode: mode,
-            players: [%Player{name: current_user.email, symbol: Enum.random(@symbols)}]
-          })
+      "singleplayer"  ->
 
-        Games.broadcast!(self(), "games", {:new_game, game})
-
-        socket =
-          socket
-          |> assign(mode: "singleplayer")
-          |> push_redirect(to: Routes.game_path(socket, :game, game.id))
-
-        {:noreply, socket}
+        {:noreply, socket |> put_flash(:info, "Not yet implemented try again later")}
     end
   end
 

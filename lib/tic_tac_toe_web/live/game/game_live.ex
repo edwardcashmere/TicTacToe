@@ -2,7 +2,6 @@ defmodule TicTacToeWeb.GameLive do
   use TicTacToeWeb, :live_view
 
   alias TicTacToe.Games
-  import TicTacToeWeb.Symbols
   on_mount {TicTacToeWeb.Auth, :user}
 
   @impl true
