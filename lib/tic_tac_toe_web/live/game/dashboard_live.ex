@@ -12,6 +12,10 @@ defmodule TicTacToeWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(TicTacToe.PubSub, "games")
+    end
+
     socket =
       socket
       |> assign(
@@ -23,10 +27,7 @@ defmodule TicTacToeWeb.DashboardLive do
     {:ok, socket}
   end
 
-  def handle_params(%{"game_id" => game_id}, _uri, socket) do
-    {:noreply, socket}
-  end
-
+  @impl true
   def handle_params(_params, _uri, socket) do
     {:noreply, socket}
   end
@@ -45,6 +46,8 @@ defmodule TicTacToeWeb.DashboardLive do
             players: [%Player{name: current_user.email, symbol: Enum.random(["X", "O"])}]
           })
 
+        Games.broadcast!(self(), "games", {:new_game, game})
+
         socket =
           socket
           |> assign(mode: "multiplayer")
@@ -58,6 +61,8 @@ defmodule TicTacToeWeb.DashboardLive do
             mode: mode,
             players: [%Player{name: current_user.email, symbol: Enum.random(@symbols)}]
           })
+
+        Games.broadcast!(self(), "games", {:new_game, game})
 
         socket =
           socket
@@ -92,5 +97,10 @@ defmodule TicTacToeWeb.DashboardLive do
     )
 
     {:noreply, socket |> push_redirect(to: Routes.game_path(socket, :game, game.id))}
+  end
+
+  @impl true
+  def handle_info({:new_game, game}, %{assigns: %{games: games}} = socket) do
+    {:noreply, assign(socket, :games, [game | games])}
   end
 end

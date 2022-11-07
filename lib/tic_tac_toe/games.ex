@@ -89,6 +89,16 @@ defmodule TicTacToe.Games do
     Repo.delete(game)
   end
 
+  @spec broadcast!(pid(), String.t(), any) :: :ok | term()
+  def broadcast!(pid, channel, data) do
+    Phoenix.PubSub.broadcast_from!(
+      TicTacToe.PubSub,
+      pid,
+      channel,
+      data
+    )
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking game changes.
 

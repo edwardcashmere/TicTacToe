@@ -2,11 +2,17 @@
   <%= unless @game_start do %>
     <div class="w-full text-white text-3xl flex justify-center p-2 bg-gray-500 shadow-md rounded-sm"> Waiting for 2nd user to Join before starting</div>
   <% end %>
+  <%= if @draw? or @winner? do %>
+  <div class="w-full flex justify-center">
+    <button class="text-white bg-green-500 w-20 h-20 p-2 rounded-sm shadow-md" phx-click="new_game"> New Game</button>
+  </div>
+  <% end %>
   <div class={"flex flex-col justify-items-center items-center h-screen mt-40 " <> if @game_start, do: " opacity-100", else: "opacity-0" }>
     <h1 class="text-white mb-10 text-4xl">Game Board</h1>
-    <section class="grid grid-cols-3 mb-10">
+    <section class={"grid grid-cols-3 mb-10 transition ease-in-out duration-1000 " <> if @winner?, do: " opacity-0", else: ""} >
       <%= for %{position: position, value: value} <- @board do %>
-        <div class="flex justify-center items-center text-white h-32 w-32 border-white border-2 hover:cursor-pointer" phx-value-position={position} phx-click="mark">
+        <div class="flex justify-center items-center text-white h-32 w-32
+         border-white border-2 hover:cursor-pointer" phx-value-position={position} phx-click="mark">
           <%= maybe_add_svg_icon(value) %>
         </div>
       <% end %>
@@ -16,11 +22,16 @@
         Turn: <%= if @active_player? do %>
                 <span class="text-white"><%= @current_user.email %></span>
               <% else %>
-                <span class="text-white"><%= filter_players(@game.players, @current_user) %></span>
+                <span class="text-white"><%= filter_players_for_name(@game.players, @current_user) %></span>
               <% end %>
       </div>
-      <div class="text-green-500 text-2xl">
-        Player: <%= @current_user.email %>
+      <div class="flex space-x-3 ">
+       <span class=" text-green-500 text-2xl">
+         Player: <%= @current_user.email %>  
+       </span> 
+       <span class=" text-green-500 text-2xl">
+         Symbol: <%= @player["symbol"] %>
+       </span>
       </div>
     </section>
   </div>

@@ -19,8 +19,9 @@ defmodule TicTacToeWeb.GameLive do
       socket
       |> assign(game: game)
       |> assign(board: Enum.map(0..8, fn index -> %{position: index, value: nil} end))
-      |> assign(player: Enum.at(game.players, 0))
-      |> assign(winner: nil)
+      |> assign(player: filter_players(game.players, socket.assigns.current_user))
+      |> assign(winner?: false)
+      |> assign(draw?: false)
       |> assign(players: Enum.count(game.players))
       |> assign(game_start: false || Enum.count(game.players) > 1)
       |> assign(active_player?: false)
@@ -43,19 +44,45 @@ defmodule TicTacToeWeb.GameLive do
         end
       end)
 
-    Phoenix.PubSub.broadcast_from!(
-      TicTacToe.PubSub,
-      self(),
-      "game-" <> game.id,
-      {:board_updated, {selected_position, player["symbol"]}}
-    )
+    case check_winner(new_board) do
+      true ->
+        # tell the other player the game has winner
+        Games.broadcast!(self(), "game-" <> game.id, {:winner, player})
+        # disable board reduce opacity
+        # set winner to true
+        # possibly color the winning move
+        socket =
+          socket
+          |> assign(:winner?, true)
+          |> assign(board: new_board)
 
-    socket =
-      socket
-      |> assign(board: new_board)
-      |> assign(active_player?: false)
+        {:noreply, socket |> put_flash(:info, "You Won the game")}
 
-    {:noreply, socket}
+      _ ->
+        Games.broadcast!(
+          self(),
+          "game-" <> game.id,
+          {:board_updated, {selected_position, player["symbol"]}}
+        )
+
+        if check_draw(new_board) do
+          socket =
+            socket
+            |> assign(board: new_board)
+            |> assign(draw?: true)
+
+          Games.broadcast!(self(), "game-" <> game.id, {:draw})
+
+          {:noreply, socket |> put_flash(:info, "Its a draw!!!")}
+        else
+          socket =
+            socket
+            |> assign(board: new_board)
+            |> assign(active_player?: false)
+
+          {:noreply, socket}
+        end
+    end
   end
 
   def handle_event(
@@ -64,6 +91,19 @@ defmodule TicTacToeWeb.GameLive do
         %{assigns: %{board: _board, player: _player, game: _game, active_player?: false}} = socket
       ) do
     {:noreply, socket |> put_flash(:info, "it is not your turn")}
+  end
+
+  def handle_event("new_game", _params, %{assigns: %{game: game}} = socket) do
+    Games.broadcast!(self(), "game-" <> game.id, :new_game)
+
+    socket =
+      socket
+      |> assign(board: Enum.map(0..8, fn index -> %{position: index, value: nil} end))
+      |> assign(winner?: false)
+      |> assign(draw?: false)
+      |> assign(active_player?: true)
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -103,6 +143,55 @@ defmodule TicTacToeWeb.GameLive do
     {:noreply, socket |> put_flash(:info, "player #{player_email} joined the game")}
   end
 
+  def handle_info({:winner, player}, socket) do
+    socket =
+      socket
+      |> assign(:winner?, true)
+
+    {:noreply, socket |> put_flash(:info, "#{player["name"]} won the game")}
+  end
+
+  def handle_info({:draw}, socket) do
+    socket =
+      socket
+      |> assign(:draw?, true)
+
+    {:noreply, socket |> put_flash(:info, "Its a draw!!!")}
+  end
+
+  def handle_info(:new_game, socket) do
+    socket =
+      socket
+      |> assign(board: Enum.map(0..8, fn index -> %{position: index, value: nil} end))
+      |> assign(winner?: false)
+      |> assign(draw?: false)
+
+    {:noreply, socket}
+  end
+
+  defp check_draw(board) do
+    Enum.all?(board, fn %{value: value} -> value != nil end)
+  end
+
+  defp check_winner(board) do
+    winning_moves = [
+      {0, 1, 2},
+      {3, 4, 5},
+      {6, 7, 8},
+      {0, 3, 6},
+      {1, 4, 7},
+      {2, 5, 8},
+      {0, 4, 8},
+      {2, 4, 6}
+    ]
+
+    Enum.any?(winning_moves, fn {pos1, pos2, pos3} ->
+      Enum.at(board, pos1).value != nil and
+        Enum.at(board, pos1).value == Enum.at(board, pos2).value and
+        Enum.at(board, pos2).value == Enum.at(board, pos3).value
+    end)
+  end
+
   defp maybe_add_svg_icon(value) do
     case value do
       "X" ->
@@ -116,12 +205,17 @@ defmodule TicTacToeWeb.GameLive do
     end
   end
 
-  defp filter_players(players, current_user) do
+  defp filter_players_for_name(players, current_user) do
     if length(players) > 1 do
       [player] = Enum.filter(players, fn player -> player["name"] != current_user.email end)
       player["name"]
     else
       ""
     end
+  end
+
+  defp filter_players(players, current_user) do
+    [player] = Enum.filter(players, fn player -> player["name"] == current_user.email end)
+    player
   end
 end
