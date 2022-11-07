@@ -55,8 +55,7 @@ defmodule TicTacToeWeb.DashboardLive do
 
         {:noreply, socket}
 
-      "singleplayer"  ->
-
+      "singleplayer" ->
         {:noreply, socket |> put_flash(:info, "Not yet implemented try again later")}
     end
   end
