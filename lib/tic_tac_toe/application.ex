@@ -15,6 +15,7 @@ defmodule TicTacToe.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: TicTacToe.PubSub},
       # Start the Endpoint (http/https)
+      TicTacToeWeb.Presence,
       TicTacToeWeb.Endpoint
       # Start a worker by calling: TicTacToe.Worker.start_link(arg)
       # {TicTacToe.Worker, arg}

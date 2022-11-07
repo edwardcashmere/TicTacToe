@@ -19,8 +19,6 @@ defmodule TicTacToeWeb.Router do
 
   scope "/", TicTacToeWeb do
     pipe_through :browser
-
-    get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
@@ -78,9 +76,8 @@ defmodule TicTacToeWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-    live "/game/:user_id", GameLive, :game, as: :game
-    live "/game/:user_id/board", GameLive, :board, as: :game
-
+    live "/", DashboardLive, :dashboard, as: :dashboard
+    live "/game/:game_id", GameLive, :game, as: :game
   end
 
   scope "/", TicTacToeWeb do
