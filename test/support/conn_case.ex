@@ -44,9 +44,13 @@ defmodule TicTacToeWeb.ConnCase do
   It stores an updated connection and a registered user in the
   test context.
   """
-  def register_and_log_in_user(%{conn: conn}) do
-    user = TicTacToe.AccountsFixtures.user_fixture()
-    %{conn: log_in_user(conn, user), user: user}
+  def register_and_log_in_user(%{conn: conn}, user \\ nil) do
+    if user do
+      %{conn: log_in_user(conn, user), user: user}
+    else
+      user = TicTacToe.AccountsFixtures.user_fixture()
+      %{conn: log_in_user(conn, user), user: user}
+    end
   end
 
   @doc """
