@@ -35,8 +35,8 @@ defmodule TicTacToeWeb.GameLive do
         %{assigns: %{board: board, player: player, game: game, active_player?: true}} = socket
       ) do
     new_board =
-      Enum.map(board, fn %{position: cur_pos} = pos ->
-        if String.to_integer(selected_position) == cur_pos do
+      Enum.map(board, fn %{position: cur_pos, value: value} = pos ->
+        if String.to_integer(selected_position) == cur_pos && !value do
           Map.put(pos, :value, player["symbol"])
         else
           pos
