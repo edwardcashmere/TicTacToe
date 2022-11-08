@@ -2,6 +2,8 @@
 
 format: # format all files
 	@mix format
+test-format: # format and run tests
+	@mix format && mix test
 
 debug: # run the server in dev
 	@iex -S mix phx.server

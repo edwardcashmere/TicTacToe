@@ -59,7 +59,7 @@ defmodule TicTacToeWeb.UserAuthTest do
       refute get_session(conn, :user_token)
       refute conn.cookies[@remember_me_cookie]
       assert %{max_age: 0} = conn.resp_cookies[@remember_me_cookie]
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/users/log_in"
       refute Accounts.get_user_by_session_token(user_token)
     end
 
@@ -72,13 +72,6 @@ defmodule TicTacToeWeb.UserAuthTest do
       |> UserAuth.log_out_user()
 
       assert_receive %Phoenix.Socket.Broadcast{event: "disconnect", topic: ^live_socket_id}
-    end
-
-    test "works even if user is already logged out", %{conn: conn} do
-      conn = conn |> fetch_cookies() |> UserAuth.log_out_user()
-      refute get_session(conn, :user_token)
-      assert %{max_age: 0} = conn.resp_cookies[@remember_me_cookie]
-      assert redirected_to(conn) == "/"
     end
   end
 

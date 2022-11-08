@@ -12,7 +12,7 @@ defmodule TicTacToe.GamesFixtures do
       attrs
       |> Enum.into(%{
         mode: "some mode",
-        players: %{}
+        players: [%{}]
       })
       |> TicTacToe.Games.create_game()
 

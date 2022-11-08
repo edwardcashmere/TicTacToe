@@ -21,11 +21,11 @@ defmodule TicTacToe.GamesTest do
     end
 
     test "create_game/1 with valid data creates a game" do
-      valid_attrs = %{mode: "some mode", players: %{}}
+      valid_attrs = %{mode: "some mode", players: [%{}]}
 
       assert {:ok, %Game{} = game} = Games.create_game(valid_attrs)
       assert game.mode == "some mode"
-      assert game.players == %{}
+      assert game.players == [%{}]
     end
 
     test "create_game/1 with invalid data returns error changeset" do
@@ -34,11 +34,11 @@ defmodule TicTacToe.GamesTest do
 
     test "update_game/2 with valid data updates the game" do
       game = game_fixture()
-      update_attrs = %{mode: "some updated mode", players: %{}}
+      update_attrs = %{mode: "some updated mode", players: [%{}]}
 
       assert {:ok, %Game{} = game} = Games.update_game(game, update_attrs)
       assert game.mode == "some updated mode"
-      assert game.players == %{}
+      assert game.players == [%{}]
     end
 
     test "update_game/2 with invalid data returns error changeset" do
