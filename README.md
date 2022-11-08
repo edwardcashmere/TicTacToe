@@ -4,11 +4,11 @@ To start install depencies and run the server I added a make file to simplify se
 
 *  Run **make** to list all the make commands possible and their definitions of what they will do.
 
-* To setup the correct language versions using *asdf* , install dependencies, create database and run migrations run **asdf-setup** .
+* To setup the correct language versions using *asdf* , install dependencies, create database and run migrations run **make asdf-setup** .
 
 * However if you do not wish to use asdf make sure you have the correct versions of elixir, erlang, nodejs included in the *.tool-versions*  then run **make setup** to setup project and **make debug** to run the project.
 
-* Run **maketest** to execute the tests.
+* Run **make test-format** to execute the tests.
 
 Currenlty the support is only for a multiplayer setup. Single player support to be included later.
 
@@ -61,6 +61,8 @@ Possible additional features :-
 * Finish the single player mode feature
 * Propally highlight the winning move
 * Add SVG for the Naughts and Crosses.
+* Hightlight winning move
+* Let User choose symbol to play with
 
 
 Now you can visit [`localhost:4000`](http://localhost:4000/users/register) from your browser.
