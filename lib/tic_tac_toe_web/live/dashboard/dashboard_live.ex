@@ -43,7 +43,13 @@ defmodule TicTacToeWeb.DashboardLive do
         {:ok, game} =
           TicTacToe.Games.create_game(%{
             mode: mode,
-            players: [%Player{name: current_user.email, symbol: Enum.random(["X", "O"])}]
+            players: [
+              %Player{
+                name: current_user.email,
+                symbol: Enum.random(["X", "O"]),
+                user_id: current_user.id
+              }
+            ]
           })
 
         Games.broadcast!(self(), "games", {:new_game, game})
@@ -73,7 +79,10 @@ defmodule TicTacToeWeb.DashboardLive do
 
     {:ok, _} =
       Games.update_game(game, %{
-        players: [%Player{name: current_user.email, symbol: symbol} | game.players]
+        players: [
+          %Player{name: current_user.email, symbol: symbol, user_id: current_user.id}
+          | game.players
+        ]
       })
 
     Phoenix.PubSub.broadcast_from!(

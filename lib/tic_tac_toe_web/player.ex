@@ -2,7 +2,7 @@ defmodule TicTacToeWeb.Player do
   @moduledoc """
     This player struck is used to track players during the game
   """
-  @enforce_keys [:name, :symbol]
+  @enforce_keys [:name, :symbol, :user_id]
   @derive {Jason.Encoder, only: [:name, :symbol, :user_id]}
   defstruct [:name, :symbol, :user_id]
 

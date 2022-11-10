@@ -62,7 +62,7 @@ Possible additional features :-
 * Propally highlight the winning move
 * Add SVG for the Naughts and Crosses.
 * Hightlight winning move
-* Let User choose symbol to play with
+* Let User choose symbol to play withgit 
 
 
 Now you can visit [`localhost:4000`](http://localhost:4000/users/register) from your browser.

@@ -23,12 +23,22 @@ defmodule TicTacToeWeb.GameLive do
       |> assign(draw?: false)
       |> assign(players: Enum.count(game.players))
       |> assign(game_start: false || Enum.count(game.players) > 1)
-      |> assign(active_player?: false)
+      |> assign(
+        active_player?: maybe_set_active_player(game.players, socket.assigns.current_user)
+      )
 
     {:ok, socket}
   end
 
   @impl true
+  def handle_event(
+        "mark",
+        %{"position" => _selected_position, "value" => _value} = _params,
+        %{assigns: %{active_player?: true}} = socket
+      ) do
+    {:noreply, socket |> put_flash(:info, "position taken try again")}
+  end
+
   def handle_event(
         "mark",
         %{"position" => selected_position},
@@ -201,6 +211,14 @@ defmodule TicTacToeWeb.GameLive do
 
       _ ->
         ""
+    end
+  end
+
+  defp maybe_set_active_player(players, current_user) do
+    if players > 1 do
+      Enum.at(players, 1)["user_id"] == current_user.id
+    else
+      false
     end
   end
 

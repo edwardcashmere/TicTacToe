@@ -12,7 +12,7 @@
     <section class={"grid grid-cols-3 mb-10 transition ease-in-out duration-1000 " <> if @winner?, do: " opacity-0", else: ""} >
       <%= for %{position: position, value: value} <- @board do %>
         <div class="flex justify-center items-center text-white h-32 w-32
-         border-white border-2 hover:cursor-pointer" phx-value-position={position} phx-click="mark" data-role={"position-" <> "#{position}"}>
+         border-white border-2 hover:cursor-pointer" phx-value-position={position} phx-value-value={value} phx-click="mark" data-role={"position-" <> "#{position}"}>
          <span class="text-white text-4xl"> <%= maybe_add_svg_icon(value) %> </span>
         </div>
       <% end %>
