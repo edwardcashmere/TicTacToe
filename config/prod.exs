@@ -15,6 +15,17 @@ config :tic_tac_toe, TicTacToeWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Configure your database
+config :tic_tac_toe, TicTacToe.Repo,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "tic_tac_toe_dev",
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

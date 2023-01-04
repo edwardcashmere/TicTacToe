@@ -1,0 +1,21 @@
+FROM bitwalker/alpine-elixir-phoenix:latest
+
+# App Directory
+ENV APP_HOME /app
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+
+#copy dependency files
+COPY mix.exs mix.lock ./
+#install dependencies and compile app
+RUN mix deps.get  && mix deps.compile
+
+COPY . .
+
+RUN mix do compile
+
+
+# App Port
+EXPOSE 4000
+
+ENTRYPOINT [ "./entrypoint.sh", "foreground" ]

@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  tictactoe_app:
+    environment: 
+      - MIX_ENV=dev
+      - PGHOST=db
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports: 
+      - 4000:4000
+    depends_on:
+      - db
+    networks:
+      - tic_tac_toe_network
+    
+  db:
+    image: postgres:13.4-alpine
+    container_name: tic_tac_toe_db
+    restart: "always"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - tic_tac_toe_network
+
+
+
+volumes:
+  postgres:
+
+networks:
+  tic_tac_toe_network:
+    driver: bridge
+  

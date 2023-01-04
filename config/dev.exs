@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :tic_tac_toe, TicTacToe.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "tic_tac_toe_dev",
+  username: System.get_env("PGUSER", "postgres"),
+  password: System.get_env("PGPASSWORD", "postgres"),
+  hostname: System.get_env("PGHOST", "localhost"),
+  database: System.get_env("PGDATABASE", "tic_tac_toe_dev"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -19,7 +19,7 @@ config :tic_tac_toe, TicTacToe.Repo,
 config :tic_tac_toe, TicTacToeWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
